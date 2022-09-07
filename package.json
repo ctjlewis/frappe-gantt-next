@@ -10,6 +10,9 @@
     "./*": "./dist/components/*/index.js",
     "./styles": "./dist/components/gantt.scss"
   },
+  "files": [
+    "dist/**/*"
+  ],
   "scripts": {
     "export": "tsmodule build",
     "dev": "next dev",
