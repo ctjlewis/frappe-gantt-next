@@ -107,24 +107,24 @@ const month_names = {
   ],
 };
 
-export default {
+export const dateUtils = {
   parse(date, date_separator = "-", time_separator = /[.:]/) {
     if (date instanceof Date) {
       return date;
     }
     if (typeof date === "string") {
-      let date_parts, time_parts;
       const parts = date.split(" ");
 
-      date_parts = parts[0]
+      const date_parts: any[] = parts[0]
         .split(date_separator)
         .map((val) => parseInt(val, 10));
-      time_parts = parts[1] && parts[1].split(time_separator);
+
+      const time_parts: any[] = parts[1] && parts[1].split(time_separator);
 
       // month is 0 indexed
       date_parts[1] = date_parts[1] - 1;
 
-      let vals = date_parts;
+      let vals: any[] = date_parts;
 
       if (time_parts && time_parts.length) {
         if (time_parts.length == 4) {
@@ -134,6 +134,8 @@ export default {
         vals = vals.concat(time_parts);
       }
 
+      // @ts-ignore - Need to type with [number, number, number, number, number,
+      // number]
       return new Date(...vals);
     }
   },
@@ -195,15 +197,13 @@ export default {
   },
 
   diff(date_a, date_b, scale = DAY) {
-    let milliseconds, seconds, hours, minutes, days, months, years;
-
-    milliseconds = date_a - date_b;
-    seconds = milliseconds / 1000;
-    minutes = seconds / 60;
-    hours = minutes / 60;
-    days = hours / 24;
-    months = days / 30;
-    years = months / 12;
+    const milliseconds = date_a - date_b;
+    const seconds = milliseconds / 1000;
+    const minutes = seconds / 60;
+    const hours = minutes / 60;
+    const days = hours / 24;
+    const months = days / 30;
+    const years = months / 12;
 
     if (!scale.endsWith("s")) {
       scale += "s";
@@ -224,6 +224,8 @@ export default {
 
   today() {
     const vals = this.get_date_values(new Date()).slice(0, 3);
+    // @ts-ignore - Need to type as [number, number, number, number, number,
+    // number].
     return new Date(...vals);
   },
 
@@ -242,6 +244,8 @@ export default {
       date.getSeconds() + (scale === SECOND ? qty : 0),
       date.getMilliseconds() + (scale === MILLISECOND ? qty : 0),
     ];
+    // @ts-ignore - Need to type as [number, number, number, number, number,
+    // number].
     return new Date(...vals);
   },
 
@@ -271,10 +275,14 @@ export default {
       should_reset(SECOND) ? 0 : date.getMilliseconds(),
     ];
 
+    // @ts-ignore - Need to type as [number, number, number, number, number,
+    // number].
     return new Date(...vals);
   },
 
   clone(date) {
+    // @ts-ignore - Need to type as [number, number, number, number, number,
+    // number].
     return new Date(...this.get_date_values(date));
   },
 
@@ -323,3 +331,5 @@ function padStart(str, targetLength, padString) {
     return padString.slice(0, targetLength) + String(str);
   }
 }
+
+export default dateUtils;

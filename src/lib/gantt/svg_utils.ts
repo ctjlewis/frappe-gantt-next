@@ -6,7 +6,7 @@ export function $(expr, con) {
 
 export function createSVG(tag, attrs) {
   const elem = document.createElementNS("http://www.w3.org/2000/svg", tag);
-  for (let attr in attrs) {
+  for (const attr in attrs) {
     if (attr === "append_to") {
       const parent = attrs.append_to;
       parent.appendChild(elem);
@@ -27,7 +27,7 @@ export function animateSVG(svgElement, attr, from, to) {
     // trigger artificial click event
     const event = document.createEvent("HTMLEvents");
     event.initEvent("click", true, true);
-    event.eventName = "click";
+    // event.eventName = "click";
     animatedSvgElement.dispatchEvent(event);
   }
 }
@@ -78,7 +78,7 @@ function cubic_bezier(name) {
   }[name];
 }
 
-$.on = (element, event, selector, callback) => {
+$.on = (element, event, selector, callback?: any) => {
   if (!callback) {
     callback = selector;
     $.bind(element, event, callback);
@@ -117,13 +117,13 @@ $.closest = (selector, element) => {
   return $.closest(selector, element.parentNode);
 };
 
-$.attr = (element, attr, value) => {
+$.attr = (element, attr, value?: any) => {
   if (!value && typeof attr === "string") {
     return element.getAttribute(attr);
   }
 
   if (typeof attr === "object") {
-    for (let key in attr) {
+    for (const key in attr) {
       $.attr(element, key, attr[key]);
     }
     return;

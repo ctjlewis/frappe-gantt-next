@@ -1,4 +1,8 @@
 import "../index.css";
+
+/**
+ * Add this to your pages/_app.tsx.
+ */
 import "../components/gantt.scss";
 
 import type { AppProps } from "next/app";

@@ -2,6 +2,25 @@ import date_utils from "./date_utils";
 import { $, createSVG, animateSVG } from "./svg_utils";
 
 export default class Bar {
+  action_completed: boolean;
+  gantt: any;
+  task: any;
+  invalid: any;
+  height: any;
+  x: number;
+  y: any;
+  corner_radius: any;
+  duration: number;
+  width: number;
+  progress_width: number;
+  bar_group: any;
+  handle_group: any;
+  $bar: any;
+  $bar_progress: any;
+  $handle_progress: any;
+  arrows: any;
+  group: any;
+
   constructor(gantt, task) {
     this.set_defaults(gantt, task);
     this.prepare();
@@ -27,13 +46,13 @@ export default class Bar {
     this.y = this.compute_y();
     this.corner_radius = this.gantt.options.bar_corner_radius;
     this.duration =
-            date_utils.diff(this.task._end, this.task._start, "hour") /
-            this.gantt.options.step;
+      date_utils.diff(this.task._end, this.task._start, "hour") /
+      this.gantt.options.step;
     this.width = this.gantt.options.column_width * this.duration;
     this.progress_width =
-            this.gantt.options.column_width *
-                this.duration *
-                (this.task.progress / 100) || 0;
+      this.gantt.options.column_width *
+      this.duration *
+      (this.task.progress / 100) || 0;
     this.group = createSVG("g", {
       class: "bar-wrapper " + (this.task.custom_class || ""),
       "data-id": this.task.id,
@@ -49,18 +68,23 @@ export default class Bar {
   }
 
   prepare_helpers() {
+    // @ts-ignore - Ignore SVG element prototype methods
     SVGElement.prototype.getX = function () {
       return +this.getAttribute("x");
     };
+    // @ts-ignore - Ignore SVG element prototype methods
     SVGElement.prototype.getY = function () {
       return +this.getAttribute("y");
     };
+    // @ts-ignore - Ignore SVG element prototype methods
     SVGElement.prototype.getWidth = function () {
       return +this.getAttribute("width");
     };
+    // @ts-ignore - Ignore SVG element prototype methods
     SVGElement.prototype.getHeight = function () {
       return +this.getAttribute("height");
     };
+    // @ts-ignore - Ignore SVG element prototype methods
     SVGElement.prototype.getEndX = function () {
       return this.getX() + this.getWidth();
     };
@@ -299,8 +323,8 @@ export default class Bar {
 
   compute_progress() {
     const progress =
-            (this.$bar_progress.getWidth() / this.$bar.getWidth()) * 100;
-    return parseInt(progress, 10);
+      (this.$bar_progress.getWidth() / this.$bar.getWidth()) * 100;
+    return parseInt(String(progress), 10);
   }
 
   compute_x() {
@@ -321,40 +345,39 @@ export default class Bar {
   compute_y() {
     return (
       this.gantt.options.header_height +
-            this.gantt.options.padding +
-            this.task._index * (this.height + this.gantt.options.padding)
+      this.gantt.options.padding +
+      this.task._index * (this.height + this.gantt.options.padding)
     );
   }
 
   get_snap_position(dx) {
-    let odx = dx,
-      rem,
-      position;
+    const odx = dx;
+    let rem, position;
 
     if (this.gantt.view_is("Week")) {
       rem = dx % (this.gantt.options.column_width / 7);
       position =
-                odx -
-                rem +
-                (rem < this.gantt.options.column_width / 14
-                  ? 0
-                  : this.gantt.options.column_width / 7);
+        odx -
+        rem +
+        (rem < this.gantt.options.column_width / 14
+          ? 0
+          : this.gantt.options.column_width / 7);
     } else if (this.gantt.view_is("Month")) {
       rem = dx % (this.gantt.options.column_width / 30);
       position =
-                odx -
-                rem +
-                (rem < this.gantt.options.column_width / 60
-                  ? 0
-                  : this.gantt.options.column_width / 30);
+        odx -
+        rem +
+        (rem < this.gantt.options.column_width / 60
+          ? 0
+          : this.gantt.options.column_width / 30);
     } else {
       rem = dx % this.gantt.options.column_width;
       position =
-                odx -
-                rem +
-                (rem < this.gantt.options.column_width / 2
-                  ? 0
-                  : this.gantt.options.column_width);
+        odx -
+        rem +
+        (rem < this.gantt.options.column_width / 2
+          ? 0
+          : this.gantt.options.column_width);
     }
     return position;
   }
@@ -398,21 +421,21 @@ export default class Bar {
       .setAttribute("x", bar.getEndX() - 9);
     const handle = this.group.querySelector(".handle.progress");
     handle &&
-            handle.setAttribute("points", this.get_progress_polygon_points());
+      handle.setAttribute("points", this.get_progress_polygon_points());
   }
 
   update_arrow_position() {
     this.arrows = this.arrows || [];
-    for (let arrow of this.arrows) {
+    for (const arrow of this.arrows) {
       arrow.update();
     }
   }
 }
 
 function isFunction(functionToCheck) {
-  var getType = {};
+  const getType = {};
   return (
     functionToCheck &&
-        getType.toString.call(functionToCheck) === "[object Function]"
+    getType.toString.call(functionToCheck) === "[object Function]"
   );
 }

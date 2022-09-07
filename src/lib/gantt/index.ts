@@ -13,7 +13,23 @@ const VIEW_MODE = {
   YEAR: "Year",
 };
 
-export default class Gantt {
+export class Gantt {
+  tasks: any;
+  options: any;
+  $svg: any;
+  $container: HTMLDivElement;
+  popup_wrapper: HTMLDivElement;
+  dependency_map: any;
+  gantt_start: any;
+  gantt_end: any;
+  dates: any[];
+  layers: any;
+  bars: any;
+  arrows: any[];
+  bar_being_dragged: any;
+  popup: any;
+
+  static VIEW_MODE: { QUARTER_DAY: string; HALF_DAY: string; DAY: string; WEEK: string; MONTH: string; YEAR: string; };
   constructor(wrapper, tasks, options) {
     this.setup_wrapper(wrapper);
     this.setup_options(options);
@@ -40,7 +56,7 @@ export default class Gantt {
     } else {
       throw new TypeError(
         "Frappé Gantt only supports usage of a string CSS selector," +
-                    " HTML DOM element or SVG DOM element for the 'element' parameter"
+        " HTML DOM element or SVG DOM element for the 'element' parameter"
       );
     }
 
@@ -156,8 +172,8 @@ export default class Gantt {
 
   setup_dependencies() {
     this.dependency_map = {};
-    for (let t of this.tasks) {
-      for (let d of t.dependencies) {
+    for (const t of this.tasks) {
+      for (const d of t.dependencies) {
         this.dependency_map[d] = this.dependency_map[d] || [];
         this.dependency_map[d].push(t.id);
       }
@@ -209,7 +225,7 @@ export default class Gantt {
   setup_gantt_dates() {
     this.gantt_start = this.gantt_end = null;
 
-    for (let task of this.tasks) {
+    for (const task of this.tasks) {
       // set global start and end date
       if (!this.gantt_start || task._start < this.gantt_start) {
         this.gantt_start = task._start;
@@ -283,7 +299,7 @@ export default class Gantt {
     this.layers = {};
     const layers = ["grid", "date", "arrow", "progress", "bar", "details"];
     // make group layers
-    for (let layer of layers) {
+    for (const layer of layers) {
       this.layers[layer] = createSVG("g", {
         class: layer,
         append_to: this.$svg,
@@ -302,10 +318,10 @@ export default class Gantt {
   make_grid_background() {
     const grid_width = this.dates.length * this.options.column_width;
     const grid_height =
-            this.options.header_height +
-            this.options.padding +
-            (this.options.bar_height + this.options.padding) *
-                this.tasks.length;
+      this.options.header_height +
+      this.options.padding +
+      (this.options.bar_height + this.options.padding) *
+      this.tasks.length;
 
     createSVG("rect", {
       x: 0,
@@ -331,7 +347,7 @@ export default class Gantt {
 
     let row_y = this.options.header_height + this.options.padding / 2;
 
-    for (let task of this.tasks) {
+    for (const task of this.tasks) {
       createSVG("rect", {
         x: 0,
         y: row_y,
@@ -369,12 +385,12 @@ export default class Gantt {
 
   make_grid_ticks() {
     let tick_x = 0;
-    let tick_y = this.options.header_height + this.options.padding / 2;
-    let tick_height =
-            (this.options.bar_height + this.options.padding) *
-            this.tasks.length;
+    const tick_y = this.options.header_height + this.options.padding / 2;
+    const tick_height =
+      (this.options.bar_height + this.options.padding) *
+      this.tasks.length;
 
-    for (let date of this.dates) {
+    for (const date of this.dates) {
       let tick_class = "tick";
       // thick tick for monday
       if (this.view_is(VIEW_MODE.DAY) && date.getDate() === 1) {
@@ -383,15 +399,15 @@ export default class Gantt {
       // thick tick for first week
       if (
         this.view_is(VIEW_MODE.WEEK) &&
-                date.getDate() >= 1 &&
-                date.getDate() < 8
+        date.getDate() >= 1 &&
+        date.getDate() < 8
       ) {
         tick_class += " thick";
       }
       // thick ticks for quarters
       if (
         this.view_is(VIEW_MODE.MONTH) &&
-                (date.getMonth() + 1) % 3 === 0
+        (date.getMonth() + 1) % 3 === 0
       ) {
         tick_class += " thick";
       }
@@ -404,9 +420,9 @@ export default class Gantt {
 
       if (this.view_is(VIEW_MODE.MONTH)) {
         tick_x +=
-                    (date_utils.get_days_in_month(date) *
-                        this.options.column_width) /
-                    30;
+          (date_utils.get_days_in_month(date) *
+            this.options.column_width) /
+          30;
       } else {
         tick_x += this.options.column_width;
       }
@@ -417,17 +433,17 @@ export default class Gantt {
     // highlight today's date
     if (this.view_is(VIEW_MODE.DAY)) {
       const x =
-                (date_utils.diff(date_utils.today(), this.gantt_start, "hour") /
-                    this.options.step) *
-                this.options.column_width;
+        (date_utils.diff(date_utils.today(), this.gantt_start, "hour") /
+          this.options.step) *
+        this.options.column_width;
       const y = 0;
 
       const width = this.options.column_width;
       const height =
-                (this.options.bar_height + this.options.padding) *
-                    this.tasks.length +
-                this.options.header_height +
-                this.options.padding / 2;
+        (this.options.bar_height + this.options.padding) *
+        this.tasks.length +
+        this.options.header_height +
+        this.options.padding / 2;
 
       createSVG("rect", {
         x,
@@ -441,7 +457,7 @@ export default class Gantt {
   }
 
   make_dates() {
-    for (let date of this.get_dates_to_draw()) {
+    for (const date of this.get_dates_to_draw()) {
       createSVG("text", {
         x: date.lower_x,
         y: date.lower_y,
@@ -495,45 +511,45 @@ export default class Gantt {
         this.options.language
       ),
       Day_lower:
-                date.getDate() !== last_date.getDate()
-                  ? date_utils.format(date, "D", this.options.language)
-                  : "",
+        date.getDate() !== last_date.getDate()
+          ? date_utils.format(date, "D", this.options.language)
+          : "",
       Week_lower:
-                date.getMonth() !== last_date.getMonth()
-                  ? date_utils.format(date, "D MMM", this.options.language)
-                  : date_utils.format(date, "D", this.options.language),
+        date.getMonth() !== last_date.getMonth()
+          ? date_utils.format(date, "D MMM", this.options.language)
+          : date_utils.format(date, "D", this.options.language),
       Month_lower: date_utils.format(date, "MMMM", this.options.language),
       Year_lower: date_utils.format(date, "YYYY", this.options.language),
       "Quarter Day_upper":
-                date.getDate() !== last_date.getDate()
-                  ? date_utils.format(date, "D MMM", this.options.language)
-                  : "",
+        date.getDate() !== last_date.getDate()
+          ? date_utils.format(date, "D MMM", this.options.language)
+          : "",
       "Half Day_upper":
-                date.getDate() !== last_date.getDate()
-                  ? date.getMonth() !== last_date.getMonth()
-                    ? date_utils.format(
-                      date,
-                      "D MMM",
-                      this.options.language
-                    )
-                    : date_utils.format(date, "D", this.options.language)
-                  : "",
+        date.getDate() !== last_date.getDate()
+          ? date.getMonth() !== last_date.getMonth()
+            ? date_utils.format(
+              date,
+              "D MMM",
+              this.options.language
+            )
+            : date_utils.format(date, "D", this.options.language)
+          : "",
       Day_upper:
-                date.getMonth() !== last_date.getMonth()
-                  ? date_utils.format(date, "MMMM", this.options.language)
-                  : "",
+        date.getMonth() !== last_date.getMonth()
+          ? date_utils.format(date, "MMMM", this.options.language)
+          : "",
       Week_upper:
-                date.getMonth() !== last_date.getMonth()
-                  ? date_utils.format(date, "MMMM", this.options.language)
-                  : "",
+        date.getMonth() !== last_date.getMonth()
+          ? date_utils.format(date, "MMMM", this.options.language)
+          : "",
       Month_upper:
-                date.getFullYear() !== last_date.getFullYear()
-                  ? date_utils.format(date, "YYYY", this.options.language)
-                  : "",
+        date.getFullYear() !== last_date.getFullYear()
+          ? date_utils.format(date, "YYYY", this.options.language)
+          : "",
       Year_upper:
-                date.getFullYear() !== last_date.getFullYear()
-                  ? date_utils.format(date, "YYYY", this.options.language)
-                  : "",
+        date.getFullYear() !== last_date.getFullYear()
+          ? date_utils.format(date, "YYYY", this.options.language)
+          : "",
     };
 
     const base_pos = {
@@ -577,7 +593,7 @@ export default class Gantt {
 
   make_arrows() {
     this.arrows = [];
-    for (let task of this.tasks) {
+    for (const task of this.tasks) {
       let arrows = [];
       arrows = task.dependencies
         .map((task_id) => {
@@ -597,11 +613,11 @@ export default class Gantt {
   }
 
   map_arrows_on_bars() {
-    for (let bar of this.bars) {
+    for (const bar of this.bars) {
       bar.arrows = this.arrows.filter((arrow) => {
         return (
           arrow.from_task.task.id === bar.task.id ||
-                    arrow.to_task.task.id === bar.task.id
+          arrow.to_task.task.id === bar.task.id
         );
       });
     }
@@ -628,9 +644,9 @@ export default class Gantt {
     );
 
     const scroll_pos =
-            (hours_before_first_task / this.options.step) *
-                this.options.column_width -
-            this.options.column_width;
+      (hours_before_first_task / this.options.step) *
+      this.options.column_width -
+      this.options.column_width;
 
     parent_element.scrollLeft = scroll_pos;
   }
@@ -779,7 +795,7 @@ export default class Gantt {
     $.on(this.$svg, "mousemove", (e) => {
       if (!is_resizing) return;
       let dx = e.offsetX - x_on_start;
-      let dy = e.offsetY - y_on_start;
+      const dy = e.offsetY - y_on_start;
 
       if (dx > $bar_progress.max_dx) {
         dx = $bar_progress.max_dx;
@@ -819,34 +835,33 @@ export default class Gantt {
   }
 
   get_snap_position(dx) {
-    let odx = dx,
-      rem,
-      position;
+    const odx = dx;
+    let rem, position;
 
     if (this.view_is(VIEW_MODE.WEEK)) {
       rem = dx % (this.options.column_width / 7);
       position =
-                odx -
-                rem +
-                (rem < this.options.column_width / 14
-                  ? 0
-                  : this.options.column_width / 7);
+        odx -
+        rem +
+        (rem < this.options.column_width / 14
+          ? 0
+          : this.options.column_width / 7);
     } else if (this.view_is(VIEW_MODE.MONTH)) {
       rem = dx % (this.options.column_width / 30);
       position =
-                odx -
-                rem +
-                (rem < this.options.column_width / 60
-                  ? 0
-                  : this.options.column_width / 30);
+        odx -
+        rem +
+        (rem < this.options.column_width / 60
+          ? 0
+          : this.options.column_width / 30);
     } else {
       rem = dx % this.options.column_width;
       position =
-                odx -
-                rem +
-                (rem < this.options.column_width / 2
-                  ? 0
-                  : this.options.column_width);
+        odx -
+        rem +
+        (rem < this.options.column_width / 2
+          ? 0
+          : this.options.column_width);
     }
     return position;
   }
