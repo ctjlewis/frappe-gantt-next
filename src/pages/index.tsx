@@ -1,11 +1,6 @@
 import Head from "next/head";
-
-import { CardGrid } from "../components/CardGrid";
-import { Footer } from "../components/Footer";
-import { GetStarted } from "../components/GetStarted";
-import { Welcome } from "../components/Welcome";
-import { FrappeGantt } from "../FrappeGantt";
-import { Task } from "../Task";
+import { FrappeGantt } from "../components/FrappeGantt";
+import { Task } from "../components/FrappeGantt/Task";
 
 export default function Home() {
   const tasks: Task[] = [
@@ -30,8 +25,6 @@ export default function Home() {
       <main>
         <FrappeGantt tasks={tasks} />
       </main>
-
-      <Footer />
     </>
   );
 }

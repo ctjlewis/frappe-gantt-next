@@ -1,6 +1,7 @@
+// @ts-nocheck - Disable
 /* eslint-disable @typescript-eslint/no-empty-function */
 import React, { createRef } from "react";
-import Gantt from "./lib/frappe-gantt";
+import Gantt from "../../lib/gantt";
 import { Moment } from "moment";
 import { Task } from "./Task";
 import { ViewMode } from "./ViewMode";

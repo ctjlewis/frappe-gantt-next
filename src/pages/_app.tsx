@@ -1,5 +1,5 @@
 import "../index.css";
-import "../lib/frappe-gantt/gantt.scss";
+import "../components/gantt.scss";
 
 import type { AppProps } from "next/app";
 import { StrictMode } from "react";

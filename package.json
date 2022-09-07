@@ -3,13 +3,12 @@
   "version": "0.0.1",
   "license": "MIT",
   "platform": "browser",
-  "style": "dist/bundle.css",
+  "style": "dist/components/gantt.scss",
   "exports": {
     "./package.json": "./package.json",
     ".": "./dist/index.js",
     "./*": "./dist/components/*/index.js",
-    "./styles": "./dist/bundle.css",
-    "./styles/*": "./dist/components/*/index.css"
+    "./styles": "./dist/components/gantt.scss"
   },
   "scripts": {
     "export": "tsmodule build",
