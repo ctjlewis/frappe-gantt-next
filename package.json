@@ -18,7 +18,7 @@
     "lint": "next lint --fix",
     "pretest": "tsmodule build --runtime-only",
     "test": "ava",
-    "prepublishOnly": "yarn export && yarn test"
+    "prepublishOnly": "yarn export"
   },
   "resolutions": {
     "@types/react": "^17.0.38",
