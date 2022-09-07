@@ -83,3 +83,6 @@ export class FrappeGantt extends React.Component<FrappeGanttProps, any> {
     );
   }
 }
+
+export * from "./Task";
+export * from "./ViewMode";
