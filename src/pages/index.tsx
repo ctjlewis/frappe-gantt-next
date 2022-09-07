@@ -4,8 +4,21 @@ import { CardGrid } from "../components/CardGrid";
 import { Footer } from "../components/Footer";
 import { GetStarted } from "../components/GetStarted";
 import { Welcome } from "../components/Welcome";
+import { FrappeGantt } from "../FrappeGantt";
+import { Task } from "../Task";
 
 export default function Home() {
+  const tasks: Task[] = [
+    new Task({
+      id: "Task 1",
+      name: "Redesign website",
+      start: "2016-12-28",
+      end: "2016-12-31",
+      progress: 20,
+      // dependencies: 'Task 2, Task 3'
+    }),
+  ];
+
   return (
     <>
       <Head>
@@ -15,9 +28,7 @@ export default function Home() {
       </Head>
 
       <main>
-        <Welcome />
-        <GetStarted />
-        <CardGrid />
+        <FrappeGantt tasks={tasks} />
       </main>
 
       <Footer />
