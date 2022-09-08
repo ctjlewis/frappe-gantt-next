@@ -1,6 +1,6 @@
 {
   "name": "next-gantt",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "license": "MIT",
   "platform": "browser",
   "style": "dist/components/gantt.scss",
