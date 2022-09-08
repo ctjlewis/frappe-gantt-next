@@ -15,7 +15,7 @@ export default function Home() {
   return (
     <>
       <main>
-        <Gantt tasks={tasks} />
+        <Gantt tasks={tasks} viewMode="Month" />
       </main>
     </>
   );

@@ -6,7 +6,7 @@ import { Moment } from "moment";
 import { ViewMode } from "./ViewMode";
 
 const ganttDefaultProps = {
-  viewMode: ViewMode.Day,
+  viewMode: "Day",
   onTasksChange: (tasks: Task[]) => {},
   onClick: (task: Task) => {},
   onDateChange: (task: Task, start: Moment, end: Moment) => {},
@@ -32,18 +32,24 @@ export const Gantt = ({
 
   useEffect(
     () => {
-      new FrappeGantt(svgRef.current, tasks, {
-        on_click: onClick,
-        on_view_change: onViewChange,
-        on_progress_change: (task: Task, progress: number) => {
-          onProgressChange?.(task, progress);
-          onTasksChange?.(tasks);
-        },
-        on_date_change: (task: Task, start: Moment, end: Moment) => {
-          onDateChange?.(task, start, end);
-          onTasksChange?.(tasks);
+      const gantt = new FrappeGantt(
+        svgRef.current,
+        tasks,
+        {
+          on_click: onClick,
+          on_view_change: onViewChange,
+          on_progress_change: (task: Task, progress: number) => {
+            onProgressChange?.(task, progress);
+            onTasksChange?.(tasks);
+          },
+          on_date_change: (task: Task, start: Moment, end: Moment) => {
+            onDateChange?.(task, start, end);
+            onTasksChange?.(tasks);
+          }
         }
-      });
+      );
+
+      gantt.change_view_mode(viewMode);
 
       const midOfSvg = svgRef.current.clientWidth * 0.5;
       ganttRef.current.scrollLeft = midOfSvg;
