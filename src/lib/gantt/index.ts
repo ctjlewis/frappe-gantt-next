@@ -29,7 +29,15 @@ export class FrappeGantt {
   bar_being_dragged: any;
   popup: any;
 
-  static VIEW_MODE: { QUARTER_DAY: string; HALF_DAY: string; DAY: string; WEEK: string; MONTH: string; YEAR: string; };
+  static VIEW_MODE: {
+    QUARTER_DAY: string;
+    HALF_DAY: string;
+    DAY: string;
+    WEEK: string;
+    MONTH: string;
+    YEAR: string;
+  };
+
   constructor(wrapper, tasks, options) {
     this.setup_wrapper(wrapper);
     this.setup_options(options);
