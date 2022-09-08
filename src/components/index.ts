@@ -1,1 +1,1 @@
-export * from "./FrappeGantt";
+export * from "./Gantt";

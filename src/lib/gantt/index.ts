@@ -13,7 +13,7 @@ const VIEW_MODE = {
   YEAR: "Year",
 };
 
-export class Gantt {
+export class FrappeGantt {
   tasks: any;
   options: any;
   $svg: any;
@@ -940,7 +940,7 @@ export class Gantt {
   }
 }
 
-Gantt.VIEW_MODE = VIEW_MODE;
+FrappeGantt.VIEW_MODE = VIEW_MODE;
 
 function generate_id(task) {
   return task.name + "_" + Math.random().toString(36).slice(2, 12);

@@ -1,17 +1,17 @@
 import Head from "next/head";
-import { FrappeGantt } from "../components/FrappeGantt";
-import { Task } from "../components/FrappeGantt/Task";
+
+import { Task, Gantt } from "../components/Gantt";
 
 export default function Home() {
   const tasks: Task[] = [
-    new Task({
+    {
       id: "Task 1",
       name: "Redesign website",
       start: "2016-12-28",
       end: "2016-12-31",
       progress: 20,
       // dependencies: 'Task 2, Task 3'
-    }),
+    },
   ];
 
   return (
@@ -23,7 +23,7 @@ export default function Home() {
       </Head>
 
       <main>
-        <FrappeGantt tasks={tasks} />
+        <Gantt tasks={tasks} />
       </main>
     </>
   );

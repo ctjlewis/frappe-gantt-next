@@ -1,42 +1,42 @@
 // @ts-nocheck - Disable
 /* eslint-disable @typescript-eslint/no-empty-function */
 import React, { createRef } from "react";
-import { Gantt } from "../../lib";
+import { FrappeGantt } from "../../lib";
+import { GanttTask } from "./Task";
 import { Moment } from "moment";
-import { Task } from "./Task";
 import { ViewMode } from "./ViewMode";
 
-export type FrappeGanttProps = {
-  tasks: Task[];
-} & Partial<FrappeGanttOptionalProps>;
+export type GanttProps = {
+  tasks: Partial<GanttTask>[];
+} & Partial<GanttOptionalProps>;
 
-export type FrappeGanttOptionalProps = Readonly<typeof frappeGanttDefaultProps>;
+export type GanttOptionalProps = Readonly<typeof ganttDefaultProps>;
 
-const frappeGanttDefaultProps = {
+const ganttDefaultProps = {
   viewMode: ViewMode.Day,
-  onTasksChange: (tasks: Task[]) => {},
-  onClick: (task: Task) => {},
-  onDateChange: (task: Task, start: Moment, end: Moment) => {},
-  onProgressChange: (task: Task, progress: number) => {},
+  onTasksChange: (tasks: GanttTask[]) => {},
+  onClick: (task: GanttTask) => {},
+  onDateChange: (task: GanttTask, start: Moment, end: Moment) => {},
+  onProgressChange: (task: GanttTask, progress: number) => {},
   onViewChange: (mode: ViewMode) => {}
 };
 
-export class FrappeGantt extends React.Component<FrappeGanttProps, any> {
+export class Gantt extends React.Component<GanttProps, any> {
   private _target = createRef<HTMLDivElement>();
   private _svg = createRef<SVGSVGElement>();
   private _gantt: any = null;
 
-  static defaultProps = frappeGanttDefaultProps;
+  static defaultProps = ganttDefaultProps;
 
   state = {
     viewMode: null,
     tasks: []
   };
 
-  static getDerivedStateFromProps(nextProps: FrappeGanttProps, state: any) {
+  static getDerivedStateFromProps(nextProps: GanttProps, state: any) {
     return {
       viewMode: nextProps.viewMode,
-      tasks: nextProps.tasks.map(t => new Task(t))
+      tasks: nextProps.tasks.map(t => new GanttTask(t))
     };
   }
 
@@ -48,14 +48,14 @@ export class FrappeGantt extends React.Component<FrappeGanttProps, any> {
   }
 
   componentDidMount() {
-    this._gantt = new Gantt(this._svg.current, this.state.tasks, {
+    this._gantt = new FrappeGantt(this._svg.current, this.state.tasks, {
       on_click: this.props.onClick,
       on_view_change: this.props.onViewChange,
-      on_progress_change: (task: Task, progress: number) => {
+      on_progress_change: (task: GanttTask, progress: number) => {
         this.props.onProgressChange!(task, progress);
         this.props.onTasksChange!(this.props.tasks);
       },
-      on_date_change: (task: Task, start: Moment, end: Moment) => {
+      on_date_change: (task: GanttTask, start: Moment, end: Moment) => {
         this.props.onDateChange!(task, start, end);
         this.props.onTasksChange!(this.props.tasks);
       }

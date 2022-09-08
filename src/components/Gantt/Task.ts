@@ -1,4 +1,13 @@
-export class Task {
+export interface Task {
+  id: string;
+  name: string;
+  start: string;
+  end: string;
+  progress?: number;
+  dependencies?: string;
+}
+
+export class GanttTask {
   private _dependencies: string[] | string = [];
 
   id = "";
@@ -6,7 +15,7 @@ export class Task {
   start = "";
   end = "";
 
-  constructor(options: Partial<Task> = {}) {
+  constructor(options: Task) {
     Object.assign(this, options);
   }
 
