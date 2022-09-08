@@ -6,7 +6,6 @@ import { Moment } from "moment";
 import { ViewMode } from "./ViewMode";
 
 const ganttDefaultProps = {
-  viewMode: "Day",
   onTasksChange: (tasks: Task[]) => {},
   onClick: (task: Task) => {},
   onDateChange: (task: Task, start: Moment, end: Moment) => {},
@@ -16,7 +15,10 @@ const ganttDefaultProps = {
 
 export type GanttOptionalProps = Readonly<typeof ganttDefaultProps>;
 
-export type GanttProps = { tasks: Task[] } & Partial<GanttOptionalProps>;
+export type GanttProps = {
+  tasks: Task[];
+  viewMode: ViewMode;
+} & Partial<GanttOptionalProps>;
 
 export const Gantt = ({
   tasks,
