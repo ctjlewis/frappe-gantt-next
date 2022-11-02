@@ -1,6 +1,6 @@
 {
   "name": "next-gantt",
-  "version": "3.1.1",
+  "version": "3.2.0",
   "license": "MIT",
   "platform": "browser",
   "style": "dist/components/gantt.scss",
@@ -9,7 +9,8 @@
     "./package.json": "./package.json",
     ".": "./dist/index.js",
     "./*": "./dist/components/*/index.js",
-    "./styles": "./dist/components/gantt.scss"
+    "./styles": "./dist/components/gantt.scss",
+    "./dist/*": "./dist/*"
   },
   "files": [
     "dist/**/*"
